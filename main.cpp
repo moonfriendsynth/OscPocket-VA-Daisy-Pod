@@ -1,6 +1,6 @@
 /*
   
-Project: OscPocketD/VASynth
+Project: OscPocketD/VASynth - Daisy Pod Version
 Description: polyphonic MIDI Virtual Analog synthsizer for OscPcoketD/Base2 (Daisy Seed)
 Author: Staffan Melin, staffan.melin@oscillator.se
 License: GNU General Public License v3.0
@@ -55,7 +55,7 @@ void UpdateLeds();
 extern uint8_t preset_max;
 extern VASynthSetting preset_setting[PRESET_MAX];
 
-static Parameter transposeParam, cutoffParam, attackParam, releaseParam, detuneParam;
+static Parameter transposeParam, cutoffParam, attackParam, releaseParam, detuneParam, portamentoParam;
 
 // UI
 //bool uiRedraw = true;
@@ -290,7 +290,9 @@ int main(void)
 	cutoffParam.Init(hardware.knob1, 30, 30000, cutoffParam.LOGARITHMIC);
 	attackParam.Init(hardware.knob1, 0, 20, attackParam.LOGARITHMIC);
 	releaseParam.Init(hardware.knob2, 0, 5, releaseParam.LINEAR);
-	detuneParam.Init(hardware.knob2, 0, 10, detuneParam.LINEAR);
+	detuneParam.Init(hardware.knob2, 0, 1, detuneParam.LINEAR);
+	portamentoParam.Init(hardware.knob2, 0, 1, portamentoParam.LOGARITHMIC);
+
 
 
 /*	// init boot/upload button
@@ -550,7 +552,7 @@ void UpdateKnobs()
 			vasynth.SetWaveform();
 			if (abs(oldk2 - k2) > 0.0005f )
 			{
-				vasynth.osc2_detune_ = 0 - detuneParam.Process();
+				vasynth.osc2_detune_ = k2;
 			}
             break;
 //---------------Osc Voices and Portamento ------------------
@@ -581,7 +583,8 @@ void UpdateKnobs()
 			}
 			if (abs(oldk2 - k2) > 0.0005f )
 			{
-				vasynth.portamento_ = (k2);
+				vasynth.portamento_ = portamentoParam.Process();
+				vasynth.SetWaveform();
 			}
             break;
 			
@@ -632,12 +635,14 @@ void UpdateKnobs()
 			if (abs(oldk1 - k1) > 0.0005f )
 			{
 				vasynth.eg_p_decay_ = (k1) * 9;
+				vasynth.SetEG();	
 			}
 			if (abs(oldk2 - k2) > 0.0005f )
 			{
 				vasynth.eg_p_sustain_ = (k2);
+				vasynth.SetEG();
+
 			}
-			vasynth.SetEG();
 			break;
 		case 6:
 			mode = 0;	
@@ -654,12 +659,14 @@ void UpdateKnobs()
 			if (abs(oldk1 - k1) > 0.0005f )
 			{
 				vasynth.eg_a_attack_ = attackParam.Process();
+				vasynth.SetEG();
 			}
 			if (abs(oldk2 - k2) > 0.0005f )
 			{
 				vasynth.eg_a_release_ = releaseParam.Process();
+				vasynth.SetEG();
+
 			}
-			vasynth.SetEG();
             break;
 			
 			
@@ -670,12 +677,15 @@ void UpdateKnobs()
 			if (abs(oldk1 - k1) > 0.0005f )
 			{
 				vasynth.eg_a_decay_ = (k1) * 9;
+				vasynth.SetEG();
+
 			}
 			if (abs(oldk2 - k2) > 0.0005f )
 			{
 				vasynth.eg_a_sustain_ = (k2);
+				vasynth.SetEG();
+
 			}
-			vasynth.SetEG();
             break;
 			
 //--------------------Noise and Pan--------------
@@ -856,12 +866,13 @@ void UpdateKnobs()
 			if (abs(oldk1 - k1) > 0.0005f )
 			{
 			vasynth.filter_cutoff_ = cutoffParam.Process();
+			vasynth.SetFilter();
 			}
 			if (abs(oldk2 - k2) > 0.0005f )
 			{
 			vasynth.filter_res_ = (k2);
+			vasynth.SetFilter();			
 			}
-			vasynth.SetFilter();
             break;
 			
 //-----------------Filter Envelope Attack and Release----------			
@@ -871,12 +882,14 @@ void UpdateKnobs()
 			if (abs(oldk1 - k1) > 0.0005f )
 			{
 			vasynth.eg_f_attack_ = attackParam.Process();
+			vasynth.SetEG();
 			}
 			if (abs(oldk2 - k2) > 0.0005f )
 			{
 			vasynth.eg_f_release_ = releaseParam.Process();
-			}
 			vasynth.SetEG();
+			}
+
             break;
 			
 //----------------Filter Envelope Decay and Sustain----------
@@ -888,10 +901,10 @@ void UpdateKnobs()
 			vasynth.eg_f_decay_ = (k1) * 9;
 			}
 			if (abs(oldk2 - k2) > 0.0005f )
+			vasynth.SetEG();				
 			{
 			vasynth.eg_f_sustain_ = (k2);
 			}
-			vasynth.SetEG();
             break;
 			
 //----------------Filter Type and Envelope Amount----------
@@ -963,12 +976,14 @@ void UpdateKnobs()
 			if (abs(oldk1 - k1) > 0.0005f )
 			{
 				vasynth.delay_delay_ = k1 * 2.0f;
+				vasynth.SetDelay();
 			}
 			if (abs(oldk2 - k2) > 0.0005f )
 			{
 				vasynth.delay_feedback_ = k2;
+				vasynth.SetDelay();
+
 			}
-			vasynth.SetDelay();
             break;
 
 //-------------Reverb Filter and Feedback---------
@@ -978,12 +993,13 @@ void UpdateKnobs()
 			if (abs(oldk1 - k1) > 0.0005f )
 			{
 				vasynth.reverb_lpffreq_  = cutoffParam.Process();
+				vasynth.SetReverb();
 			}
 			if (abs(oldk2 - k2) > 0.0005f )
 			{
 				vasynth.reverb_feedback_ = k2;
+				vasynth.SetReverb();
 			}
-			vasynth.SetReverb();
 
             break;
 			
