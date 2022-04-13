@@ -1,5 +1,5 @@
 # Project Name
-TARGET = oscvasynth
+TARGET = oscvasynthpod
 
 # Sources
 CPP_SOURCES = main.cpp vasynth.cpp 
