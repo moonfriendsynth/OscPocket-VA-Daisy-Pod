@@ -109,7 +109,7 @@ save_slot = 0;
 		osc2_[i].Init(sample_rate_);
 		osc2_[i].SetWaveform(osc2_waveform_);
 		osc2_[i].SetAmp(osc2_level_); // default
-		osc2_[i].SetFreq(440.0f + osc2_detune_); // default
+		osc2_[i].SetFreq(440.0f * osc2_detune_); // default
 		
 		// EG - pitch
 		
@@ -423,7 +423,7 @@ void VASynth::NoteOn(uint8_t midi_note, uint8_t midi_velocity)
 	{
 		midi2 = midi_note;
 	}
-	osc2_[osc_next_].SetFreq(mtof(midi2) + osc2_detune_);
+	osc2_[osc_next_].SetFreq(mtof(midi2) * osc2_detune_);
 
 	eg_a_[osc_next_].SetSustainLevel(((float)midi_velocity / MIDI_VELOCITY_MAX) * eg_a_sustain_);
 }	
