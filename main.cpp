@@ -32,7 +32,7 @@ you're dealing with here.
 #include "dev/lcd_hd44780.h"
 
 #include "main.h"
-
+#include "qspi.h"
 #include "vasynth.h"
 
 
@@ -110,10 +110,6 @@ void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
 		vasynth.SaveToLive(&preset_setting[slot]);	
 	}
 	
-	if (hardware.encoder.RisingEdge())
-	{
-		vasynth.FlashSave(slot);
-	}
 	
 		hardware.button1.Debounce();
 	hardware.button2.Debounce();
@@ -351,7 +347,7 @@ int main(void)
 //		ui.Work();
 //		ui.Draw();
 		
-		
+
 		
 		#ifdef OPD_BASE_MIDI
         // handle MIDI Events
@@ -432,7 +428,7 @@ void UpdateButtons()
 
 void UpdateEncoder()
 {
-	
+
 
 }
 
