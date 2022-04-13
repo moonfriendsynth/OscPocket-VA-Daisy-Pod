@@ -1,4 +1,4 @@
-# moonfriendsynth
+# OscPocket VA Synth - Daisy Pod Port
 Alright, this is the OscPocketD VASynth, created by Staffan Melin, ported to work on the Daisy Pod. The goal of this project is to make a full-featured virtual-analog synth run on a fairly inexpensive platform (the Pod). This is mostly a personal project that I hope to share with others. I want to share everything because:
 
 A. Open-source is great and I strongly believe that sharing everything you make will benefit the creator and the user
