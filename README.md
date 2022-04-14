@@ -10,7 +10,6 @@ If you just want to use this synth on you Daisy Pod, download the .bin file and 
 
 CURRENT MAJOR MISSING FUNCTION: I can't figure out how to save current settings/patches to be loaded again in the future. So that means when you power off your Pod, all settings will be lost. Thats a bummer I know, and I'm working on it/asking other people to help me out.
 
-Here are what the colors mean and what perameters you can adjust:
 <h1>Controls</h1>
 
 First, you will need a midi keyboard or some sort of midi source to make any sort of sound out of this. When you start your Pod up, you will see one of the two LEDs on you Pod light up red. The other will stay unlit. These two LEDs represent the menu to change the perameters of your synth. When you push the first button on your Pod, the first LED will cycle through colors, which will represent different categories, and when you push the second button, the second LED will also cycle through various colors, which represent specific sets of perameters that can be adjusted with the knobs. Each time the colors of the LED change, the function of the two knobs also change. It's not the best system, but again, the whole point of this is to have a compact, cheap, and high quality digital synth.
@@ -104,3 +103,22 @@ Knob2: Reverb Feedback
 PURPLE/BLUE
 Knob1: Dry signal amount
 Knob2: Wet signal amount
+
+<h1>To-Do List and Known Issues</h1>
+
+<h2>Features I Want to Add</h2>
+<li>Save and load, either to onboard memory or to SD Card or both
+<li>Additional effects such as wave-folder, chorus, distortion, etc 
+<li>Add filter to delay line
+<li>More/different reverb
+<li>LFO target for panning and for PWM
+<li>I've added/tweaked a few things so I need to add them to the preset template. Running list here: delay level, reverb level, filter envelope amount 
+
+<h2>Issues I Want to Fix</h2>
+<li>Knob perimeter takeover needs to fine tuned. I implemented a brute-force solution by creating if-statements for every set of parameters to check if the knob position has changed. It works well enough but surely there is a better way to do it. 
+<li>The settings for the various ADARs are off. It is very difficult to dial in a shorter attack and releases. The setting seems to jump for VERY short to noticeably long too quickly. I've tried a few things, but I just need to give it a little more time to get it right 
+<li>Detune is functional but it is not working correctly at the moment. Originally, detune was the value of the knob, added to the frequency of the note. The problem with that is that the detune is more noticeable at lower frequencies. So the detune would need to exponentially scale along with the note frequency. For now,
+I set it up so that the frequency is multiplied by the negative of the knob value. This allows the difference to remain more consistent at different frequencies, but as you lower the knob value, it goes all the way to zero, which is an extreme amount of detune. I'm bad at math so I just need to figure out the right way to set this. 
+<li>To select the number of voices, I originally implemented an option to turn a knob and depending on what percentage of the knob was turned, anywhere between 1-8 voices could be set. The problem was that if you quickly turned the knob or if you were playing while turning the knob, the Daisy Pod would just freeze. Too much thinking I suppose. So I changed it to select either 1, 5 (the safe amount), or 8 (the max amount). I feel like this can be made more intuitive or done in a way that doesn't cause problems. 
+<li>I need to figure out various forms of voice priority/stealing. I don't know the correct terminology for this, but I want to be able to hold a low note or chord and play a melody without the lower notes getting cut off, which is what is happening now
+<li>Fix the delay so that changing delay time doesn't cause nasty digital glitching
