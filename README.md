@@ -2,7 +2,7 @@
 Alright, this is the OscPocketD VASynth, created by Staffan Melin, ported to work on the Daisy Pod. The goal of this project is to make a full-featured virtual-analog synth run on a fairly inexpensive platform (the Pod). This is mostly a personal project that I hope to share with others. I want to share everything because:
 
 A. Open-source is great and I strongly believe that sharing everything you make will benefit the creator and the user
-and B. I don't really know what I'm doing and I hope someone else will come in and make this better
+and, B. I don't really know what I'm doing and I hope someone else will come in and make this better
 
 If you just want to use this synth on you Daisy Pod, download the .bin file and flash it using the web programmer on electro-smith.com. Here are the basic instructions.
 
@@ -12,7 +12,7 @@ CURRENT MAJOR MISSING FUNCTION: I can't figure out how to save current settings/
 
 Here are what the colors mean and what perameters you can adjust:
 
-Category 1: Red: Oscillators
+<b><h1>Category 1: Red: Oscillators</b></h1>
 
 RED/UNLIT
 Knob1: Oscillator 1 waveshape
@@ -39,7 +39,7 @@ RED/PURPLE
 Knob1: Pitch Envelope Decay
 Knob2: Pitch Envelope Sustain
 
-Category 2: Green: Amp Envelope
+<h1>Category 2: Green: Amp Envelope</h1>
 
 GREEN/UNLIT
 Knob1: Attack
@@ -53,7 +53,7 @@ GREEN/GREEN
 Knob1: Noise
 Knob2: Pan
 
-Category 3: Blue: LFO
+<h1>Category 3: Blue: LFO</h1>
 
 BLUE/UNLIT
 Knob1: LFO Amount/Intensity
@@ -63,7 +63,7 @@ BLUE/RED
 Knob1: LFO Shape
 Knob2: LFO Target: None, Pitch, Filter, Amp EG // to-do, I've been working on adding an option to target the Pan, but I haven't finished it yet
 
-Category 4: Aqua: Filter
+<h1>Category 4: Aqua: Filter</h1>
 
 AQUA/UNLIT
 Knob1: Filter Frequency
@@ -82,7 +82,7 @@ Knob1: Filter Type: in order CCW to CW: Low pass, high pass, band pass, notch, a
 Knob2: Filter amount/Intensity // I may need to tweak this a bit, but I think it is giving the desired result of attenuating the filter envelope
 
 
-Category 5: Purple: FX
+<h1>Category 5: Purple: FX</h1>
 
 PURPLE/UNLIT
 Knob1: Delay Volume
