@@ -1,18 +1,23 @@
 # OscPocket VA Synth - Daisy Pod Port
+<h1>Introduction</h1>
 Alright, this is the OscPocketD VASynth, created by Staffan Melin, ported to work on the Daisy Pod. The goal of this project is to make a full-featured virtual-analog synth run on a fairly inexpensive platform (the Pod). This is mostly a personal project that I hope to share with others. I want to share everything because:
 
-A. Open-source is great and I strongly believe that sharing everything you make will benefit the creator and the user
-and, B. I don't really know what I'm doing and I hope someone else will come in and make this better
+a) Open-source is great and I strongly believe that sharing everything you make will benefit the creator and the user
+and, b) I don't really know what I'm doing and I hope someone else will come in and make this better
 
-If you just want to use this synth on you Daisy Pod, download the .bin file and flash it using the web programmer on electro-smith.com. Here are the basic instructions.
-
-First, you will need a midi keyboard or some sort of midi source to make any sort of sound out of this. When you boot this bad-boy up, you will see one of the two LEDs on you Pod light up red. The other will stay unlit. These two LEDs represent the menu to change the perameters of your synth. When you push the first button on your Pod, the first LED will cycle through colors, which will represent different categories, and when you push the second button, the second LED will also cycle through various colors, which represent specific perameters that can be adjusted. Each time the colors of the LED change, the function of the two knobs also change. It's not the best system, but again, the whole point of this is to have a compact, cheap, and high quality digital synth.
+<h1>Install</h1>
+If you just want to use this synth on you Daisy Pod, download the .bin file and flash it using the web programmer on electro-smith.com.
 
 CURRENT MAJOR MISSING FUNCTION: I can't figure out how to save current settings/patches to be loaded again in the future. So that means when you power off your Pod, all settings will be lost. Thats a bummer I know, and I'm working on it/asking other people to help me out.
 
 Here are what the colors mean and what perameters you can adjust:
+<h1>Controls</h1>
 
-<b><h1>Category 1: Red: Oscillators</b></h1>
+First, you will need a midi keyboard or some sort of midi source to make any sort of sound out of this. When you start your Pod up, you will see one of the two LEDs on you Pod light up red. The other will stay unlit. These two LEDs represent the menu to change the perameters of your synth. When you push the first button on your Pod, the first LED will cycle through colors, which will represent different categories, and when you push the second button, the second LED will also cycle through various colors, which represent specific sets of perameters that can be adjusted with the knobs. Each time the colors of the LED change, the function of the two knobs also change. It's not the best system, but again, the whole point of this is to have a compact, cheap, and high quality digital synth.
+
+<h2>Encoder</h2>
+Turn the encoder left or right to cycle through presets. In the future, I want this to be the function for loading saved patches. Pushing the encoder will save a current patch, but right now pushing the encoder does nothing. 
+<h2>Category 1: Red: Oscillators</h2>
 
 RED/UNLIT
 Knob1: Oscillator 1 waveshape
@@ -39,7 +44,7 @@ RED/PURPLE
 Knob1: Pitch Envelope Decay
 Knob2: Pitch Envelope Sustain
 
-<h1>Category 2: Green: Amp Envelope</h1>
+<h2>Category 2: Green: Amp Envelope</h2>
 
 GREEN/UNLIT
 Knob1: Attack
@@ -53,7 +58,7 @@ GREEN/GREEN
 Knob1: Noise
 Knob2: Pan
 
-<h1>Category 3: Blue: LFO</h1>
+<h2>Category 3: Blue: LFO</h2>
 
 BLUE/UNLIT
 Knob1: LFO Amount/Intensity
@@ -63,7 +68,7 @@ BLUE/RED
 Knob1: LFO Shape
 Knob2: LFO Target: None, Pitch, Filter, Amp EG // to-do, I've been working on adding an option to target the Pan, but I haven't finished it yet
 
-<h1>Category 4: Aqua: Filter</h1>
+<h2>Category 4: Aqua: Filter</h2>
 
 AQUA/UNLIT
 Knob1: Filter Frequency
@@ -82,7 +87,7 @@ Knob1: Filter Type: in order CCW to CW: Low pass, high pass, band pass, notch, a
 Knob2: Filter amount/Intensity // I may need to tweak this a bit, but I think it is giving the desired result of attenuating the filter envelope
 
 
-<h1>Category 5: Purple: FX</h1>
+<h2>Category 5: Purple: FX</h2>
 
 PURPLE/UNLIT
 Knob1: Delay Volume
