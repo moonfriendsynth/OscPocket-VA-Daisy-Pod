@@ -32,7 +32,7 @@ you're dealing with here.
 #include "dev/lcd_hd44780.h"
 
 #include "main.h"
-#include "qspi.h"
+//#include "qspi.h"
 #include "vasynth.h"
 
 
