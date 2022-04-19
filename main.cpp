@@ -24,6 +24,7 @@ you're dealing with here.
 #define OPD_BASE_MIDI // version 2 with MIDI, other LCD pins, no CV1 in, no Gate0/1 out
 
 #include "daisy_pod.h"
+#include "daisy_seed.h"
 #include "daisysp.h"
 
 #include "stm32h7xx_hal.h" // for HAL_NVIC_SystemReset();
@@ -43,11 +44,12 @@ float oldk1, oldk2, k1, k2;
 int mode;
 // globals
 DaisyPod hardware;
+extern DaisySeed hw;
 MidiUartHandler midi;
 float sysSampleRate;
 float sysCallbackRate;
 static int32_t  inc;
-static int32_t  slot;
+uint8_t slot;
 void Controls();
 void UpdateKnobs();
 void UpdateButtons();
@@ -83,35 +85,29 @@ void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
 	float voice_left, voice_right;
 	hardware.encoder.Debounce();
     inc = hardware.encoder.Increment();
-    // Change the selected LED based on the increment.
+    if (hardware.encoder.RisingEdge())
+	{
+			slot ++;
+			if (slot == 16)
+			{
+				slot = 0;
+			}
+	}
 	if (hardware.encoder.Increment())
 	{
 		if(inc > 0)
 		{
-			slot += 1;
-			// Wrap around
-			if(slot > 5)
-			{
-				slot = 0;
-			}
+			vasynth.FlashLoad(slot);		
 		}
 		else if(inc < 0)
 		{
-			// Wrap around
-			if(slot == 0)
-			{
-				slot = 5;
-			}
-			else
-			{
-				slot -= 1;
-			}
+			vasynth.FlashLoad(slot);
 		}
-		vasynth.SaveToLive(&preset_setting[slot]);	
+		
 	}
 	
 	
-		hardware.button1.Debounce();
+	hardware.button1.Debounce();
 	hardware.button2.Debounce();
 	if(hardware.button1.RisingEdge())
 	{
@@ -271,12 +267,21 @@ int main(void)
 {
 
 	// init hardware
-//	hardware.Configure();
 	hardware.Init(true); // true = boost to 480MHz
 	hardware.StartAdc();
 	sysSampleRate = hardware.AudioSampleRate();
 	sysCallbackRate = hardware.AudioCallbackRate();
-
+            QSPIHandle::Config qspi_config;
+            qspi_config.device = QSPIHandle::Config::Device::IS25LP064A;
+            qspi_config.mode   = QSPIHandle::Config::Mode::MEMORY_MAPPED;
+            qspi_config.pin_config.io0 = {DSY_GPIOF, 8};
+            qspi_config.pin_config.io1 = {DSY_GPIOF, 9};
+            qspi_config.pin_config.io2 = {DSY_GPIOF, 7};
+            qspi_config.pin_config.io3 = {DSY_GPIOF, 6};
+            qspi_config.pin_config.clk = {DSY_GPIOF, 10};
+            qspi_config.pin_config.ncs = {DSY_GPIOG, 6};
+            hw.qspi.Init(qspi_config);
+	slot = 0;
 
 	// setup incl default values
 	vasynth.First();
@@ -1038,7 +1043,4 @@ void UpdateKnobs()
 			mode = 0;
         default: break;
     }
-
-
-
 }
