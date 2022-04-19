@@ -101,7 +101,7 @@ void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
 		}
 		else if(inc < 0)
 		{
-			vasynth.FlashLoad(slot);
+			vasynth.FlashSave(slot);
 		}
 		
 	}
@@ -271,7 +271,7 @@ int main(void)
 	hardware.StartAdc();
 	sysSampleRate = hardware.AudioSampleRate();
 	sysCallbackRate = hardware.AudioCallbackRate();
-            QSPIHandle::Config qspi_config;
+ /*           QSPIHandle::Config qspi_config;
             qspi_config.device = QSPIHandle::Config::Device::IS25LP064A;
             qspi_config.mode   = QSPIHandle::Config::Mode::MEMORY_MAPPED;
             qspi_config.pin_config.io0 = {DSY_GPIOF, 8};
@@ -281,7 +281,7 @@ int main(void)
             qspi_config.pin_config.clk = {DSY_GPIOF, 10};
             qspi_config.pin_config.ncs = {DSY_GPIOG, 6};
             hw.qspi.Init(qspi_config);
-	slot = 0;
+*/	slot = 0;
 
 	// setup incl default values
 	vasynth.First();
