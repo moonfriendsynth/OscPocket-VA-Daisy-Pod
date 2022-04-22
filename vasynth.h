@@ -26,6 +26,7 @@ typedef struct
 	uint8_t filter_type;
 	float filter_res;
 	float filter_cutoff;
+	float eg_f_amount;
 	
 	float eg_a_attack;
 	float eg_a_decay;
@@ -64,6 +65,7 @@ typedef struct
 	float reverb_lpffreq;
 	float delay_delay;
 	float delay_feedback;
+	float delay_level;
 	
 	uint8_t input_channel;
 	uint8_t midi_channel;
