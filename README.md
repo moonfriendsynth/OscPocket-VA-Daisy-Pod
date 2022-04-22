@@ -16,8 +16,8 @@ First, you will need a midi keyboard or some sort of midi source to make any sor
 
 <h2>Encoder</h2>
 Push Encoder - Cycle through 16 save slots (there is currently no feedback or indicators for which slot you are on, but I'm having a little trouble figuring it out for now, but I'll try to get something implimented in the near future)
-Turn Encoder to the right - Save
-Turn Encoder to the left - Load
+Turn Encoder to the left - Save
+Turn Encoder to the right - Load
 <h2>Category 1: Red: Oscillators</h2>
 
 RED/UNLIT
