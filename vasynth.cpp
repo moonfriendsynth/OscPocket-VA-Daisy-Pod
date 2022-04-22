@@ -4,7 +4,7 @@
 
 #include "main.h"
 #include "vasynth.h"
-
+//#include "qspi.h"
 
 
 using namespace daisy;
@@ -19,12 +19,7 @@ DaisySeed hw;
 
 float lfoFreq, lfoAmp, oscWave;
 
-
 static Parameter lfoFreqParam, lfoAmpParam, oscWaveParam;
-
-
-
-
 
 
 // fx
@@ -37,57 +32,57 @@ uint8_t preset_max = PRESET_MAX;
 uint8_t preset_number = 0;
 char preset_name[PRESET_MAX][15] = {"Space pad", "Harp", "Port Solo", "Asgard", "Kajsa", "Lowlife"};
 VASynthSetting preset_setting[PRESET_MAX] = {
-{VOICES_OK, (uint8_t)VASynth::WAVE_SAW, 0.0f, VASynth::LOW, 0.3f, 3000.0f,
+{VOICES_OK, (uint8_t)VASynth::WAVE_SAW, 0.0f, VASynth::LOW, 0.3f, 3000.0f, 1.0f,
 0, 0, 1.0f, 1.0f, 0.5f, 0.5f, 1.0f, 1.0f, 0, 0, 0, 0,
 (uint8_t)VASynth::WAVE_TRI, 0.1f, 0.4f, VASynth::FILTER, 0, 0.2f,
 (uint8_t)VASynth::WAVE_TRI, 2.0f, 0.6f, 12, 0.5f, 0.3f,
-0.5f, 0.2f, 0.8f, 0.8f, 6000, 0.8f, 0.3f,
+0.5f, 0.2f, 0.8f, 0.8f, 6000, 0.8f, 0.3f, 1.0f,
 INPUT_CHANNEL_NONE, MIDI_CHANNEL_ALL, POT_TARGET_NONE, POT_TARGET_NONE}
 ,
-{VOICES_OK, (uint8_t)VASynth::WAVE_TRI, 0.0f, VASynth::LOW, 0.5f, 2000.0f,
+{VOICES_OK, (uint8_t)VASynth::WAVE_TRI, 0.0f, VASynth::LOW, 0.5f, 2000.0f, 1.0f,
 0.0f, 0.3f, 0.0f, 0.3f,   0.0f, 0.3f, 0.0f, 0.3f,   0.3f, 0.3f, 0.0f, 0.3f,
 (uint8_t)VASynth::WAVE_TRI, 0.0f, 0.0f, VASynth::FILTER, 0, 0.0f,
 (uint8_t)VASynth::WAVE_TRI, 5.0f, 0.3f, 0, 0.5f, 0.5f,
-0.8f, 0.8f, 0.2f, 0.4f, 6000, 1.0f, 0.5f,
+0.8f, 0.8f, 0.2f, 0.4f, 6000, 1.0f, 0.5f, 1.0f,
 INPUT_CHANNEL_NONE, MIDI_CHANNEL_ALL, POT_TARGET_NONE, POT_TARGET_NONE}
 ,
-{1, (uint8_t)VASynth::WAVE_TRI, 0.0f, VASynth::LOW, 0.5f, 2000.0f,
+{1, (uint8_t)VASynth::WAVE_TRI, 0.0f, VASynth::LOW, 0.5f, 2000.0f, 1.0f,
 0.5f, 0.3f, 1.0f, 0.8f,   0.3f, 0.0f, 0.3f, 0.3f,  0, 0, 0, 0,
 (uint8_t)VASynth::WAVE_TRI, 0.1f, 0.5f, VASynth::FILTER, 0.05f, 0.1f,
 (uint8_t)VASynth::WAVE_TRI, 5.0f, 0.3f, 12, 0.5f, 0.1f,
-0.8f, 0.5f, 0.5f, 0.4f, 4000, 1.0f, 0.5f,
+0.8f, 0.5f, 0.5f, 0.4f, 4000, 1.0f, 0.5f, 1.0f,
 INPUT_CHANNEL_NONE, MIDI_CHANNEL_ALL, POT_TARGET_NONE, POT_TARGET_NONE}
 ,
-{VOICES_OK, (uint8_t)VASynth::WAVE_RAMP, 0.0f, VASynth::HIGH, 0.6f, 1000.0f,
+{VOICES_OK, (uint8_t)VASynth::WAVE_RAMP, 0.0f, VASynth::HIGH, 0.6f, 1000.0f, 1.0f,
 0, 0, 1.0f, 1.0f,    1.0f, 0.0f, 1.0f, 2.0f,   0, 0, 0, 0,
 (uint8_t)VASynth::WAVE_TRI, 2.0f, 0.20f, VASynth::FILTER, 0.0f, 0.1f,
 (uint8_t)VASynth::WAVE_SIN, 3.0f, 0.6f, 0, 0.5f, 0.3f,
-0.5f, 0.2f, 0.8f, 0.6f, 3000, 0.05f, 0.2f,
+0.5f, 0.2f, 0.8f, 0.6f, 3000, 0.05f, 0.2f, 1.0f,
 INPUT_CHANNEL_NONE, MIDI_CHANNEL_ALL, POT_TARGET_NONE, POT_TARGET_NONE}
 ,
-{VOICES_OK, VASynth::WAVE_SAW, 0.0f, VASynth::LOW, 0.2f, 1000.0f,
+{VOICES_OK, VASynth::WAVE_SAW, 0.0f, VASynth::LOW, 0.2f, 1000.0f, 1.0f,
 0.0f, 0.1f, 1.0f, 0.8f,   0.2f, 0.01f, 1.0f, 0.8f,  0.5f, 1.0f, 0.0f, 1.0f,
 (uint8_t)VASynth::WAVE_TRI, 0.5f, 0.4f, VASynth::FILTER, 0.0f, 0.3f,
 (uint8_t)VASynth::WAVE_SAW, 2.0f, 0.5f, 12, 0.5f, 0.3f,
-0.2f, 0.20, 0.80, 0.8f, 6000, 0.8f, 0.4f,
+0.2f, 0.20, 0.80, 0.8f, 6000, 0.8f, 0.4f, 1.0f,
 INPUT_CHANNEL_NONE, MIDI_CHANNEL_ALL, POT_TARGET_NONE, POT_TARGET_NONE}
 ,
-{VOICES_OK, VASynth::WAVE_RAMP, 0.0f, VASynth::LOW, 0.2f, 2000.0f,
+{VOICES_OK, VASynth::WAVE_RAMP, 0.0f, VASynth::LOW, 0.2f, 2000.0f, 1.0f,
 0.0f, 0.0f, 1.0f, 0.4f,   0.0f, 0.0f, 1.0f, 0.4f,  0.0f, 0.0f, 0.0f, 0.0f,
 (uint8_t)VASynth::WAVE_TRI, 0.5f, 0.5f, VASynth::NONE, 0.0f, 0.0f,
 (uint8_t)VASynth::WAVE_SIN, 0.0f, 0.7f, 0, 0.5f, 0.4f,
-0.0f, 0.80, 0.20, 0.0f, 1000, 0.05f, 0.2f,
+0.0f, 0.80, 0.20, 0.0f, 1000, 0.05f, 0.2f, 1.0f,
 INPUT_CHANNEL_NONE, MIDI_CHANNEL_ALL, POT_TARGET_NONE, POT_TARGET_NONE}
 };
 
 /*
 template:
 
-voices, waveform, detune, filter_type, filter_res, filter_cutoff,
+voices, waveform, detune, filter_type, filter_res, filter_cutoff, filter envelope amount,
 eg_a_attack, d, s, r, eg_f_attack, d, s, r, eg_p_attack, d, s, r, 
 lfo_waveform, lfo_freq, lfo_amp, lfo_target, portamento, noise_level,
 osc2_waveform, osc2_detune, osc2_level, osc2_transpose, pan, level,
-reverb_level, reverb_dry, reverb_wet, reverb_feedback, reverb_lpffreq, delay_delay, delay_feedback, 
+reverb_level, reverb_dry, reverb_wet, reverb_feedback, reverb_lpffreq, delay_delay, delay_feedback, delay_level, 
 input_channel, 	midi_channel, pot0_target, pot1_target;
 */
 
@@ -495,6 +490,7 @@ void VASynth::SaveToLive(VASynthSetting *vas)
 	filter_type_ = vas->filter_type;
 	filter_res_ = vas->filter_res;
 	filter_cutoff_ = vas->filter_cutoff;
+	eg_f_amount_ = vas->eg_f_amount;
 	
 	eg_a_attack_ = vas->eg_a_attack;
 	eg_a_decay_ = vas->eg_a_decay;
@@ -532,6 +528,7 @@ void VASynth::SaveToLive(VASynthSetting *vas)
 	reverb_lpffreq_ = vas->reverb_lpffreq;
 	delay_delay_ = vas->delay_delay;
 	delay_feedback_ = vas->delay_feedback;
+	delay_level_ = vas->delay_level;
 	
 	input_channel_ = vas->input_channel;
 	midi_channel_ = vas->midi_channel;
@@ -554,6 +551,7 @@ void VASynth::LiveToSave(VASynthSetting *vas)
 	vas->filter_type = filter_type_;
 	vas->filter_res = filter_res_;
 	vas->filter_cutoff = filter_cutoff_;
+	vas->eg_f_amount = eg_f_amount_;
 	
 	vas->eg_a_attack = eg_a_attack_;
 	vas->eg_a_decay = eg_a_decay_;
@@ -591,6 +589,7 @@ void VASynth::LiveToSave(VASynthSetting *vas)
 	vas->reverb_lpffreq = reverb_lpffreq_;
 	vas->delay_delay = delay_delay_;
 	vas->delay_feedback = delay_feedback_;
+	vas->delay_level = delay_level_;
 	
 	vas->input_channel = input_channel_;
 	vas->midi_channel = midi_channel_;
