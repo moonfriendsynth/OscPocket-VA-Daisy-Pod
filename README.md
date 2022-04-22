@@ -15,7 +15,9 @@ CURRENT MAJOR MISSING FUNCTION: I can't figure out how to save current settings/
 First, you will need a midi keyboard or some sort of midi source to make any sort of sound out of this. When you start your Pod up, you will see one of the two LEDs on you Pod light up red. The other will stay unlit. These two LEDs represent the menu to change the perameters of your synth. When you push the first button on your Pod, the first LED will cycle through colors, which will represent different categories, and when you push the second button, the second LED will also cycle through various colors, which represent specific sets of perameters that can be adjusted with the knobs. Each time the colors of the LED change, the function of the two knobs also change. It's not the best system, but again, the whole point of this is to have a compact, cheap, and high quality digital synth.
 
 <h2>Encoder</h2>
-Turn the encoder left or right to cycle through presets. In the future, I want this to be the function for loading saved patches. Pushing the encoder will save a current patch, but right now pushing the encoder does nothing. 
+Push Encoder - Cycle through 16 save slots (there is currently no feedback or indicators for which slot you are on, but I'm having a little trouble figuring it out for now, but I'll try to get something implimented in the near future)
+Turn Encoder to the right - Save
+Turn Encoder to the left - Load
 <h2>Category 1: Red: Oscillators</h2>
 
 RED/UNLIT
