@@ -8,14 +8,10 @@ Version: 202109
 Project site: http://www.oscillator.se/opensource
 
 EDIT: This code was modified by Steven @moonfriendsynth, who doesn't know shit about shit when it 
-comes to C++, but I tried, I mean, HE tried his best. So please be cautious as you read/use this 
+comes to C++, but I tried my best. So please be cautious as you read/use this 
 code. If you find yourself wondering, "why did he do x, y, or z?" just assume that Steve is saying
-"Man, I dunno, good question." All we can say for certain is that this will run on a Daisy Pod
-and it will sound like a synthesizer and it will have a conveluted color-based menu system. Actually,
-now that we think of it, this code was only tested using a home-made Daisy Pod using left over components
-and a Daisy Seed, soldered together on a perfboard, and stuffed inside the cardboard box that the Seed
-was shipped in, so maybe it won't run on a Daisy Pod after all. Hopefully this gives you an idea of what 
-you're dealing with here. 
+"Man, I dunno, good question." I did my best to copy code from either Daisy examples or other open
+source projects. Please feel free to take this code and make it better or use it for whatever.
 
 */
 
@@ -28,7 +24,6 @@ you're dealing with here.
 #include "daisysp.h"
 
 #include "stm32h7xx_hal.h" // for HAL_NVIC_SystemReset();
-//extern "C" void HAL_NVIC_SystemReset();
 #include "core_cm7.h"
 #include "dev/lcd_hd44780.h"
 
@@ -59,12 +54,9 @@ extern VASynthSetting preset_setting[PRESET_MAX];
 
 static Parameter transposeParam, cutoffParam, attackParam, releaseParam, detuneParam, portamentoParam;
 
-// UI
-//bool uiRedraw = true;
-
 // hardware
-//LcdHD44780 lcd;
-//AdcChannelConfig adcConfig[AD_MAX];
+
+AdcChannelConfig adcConfig[AD_MAX];
 
 // sound + fx
 VASynth vasynth;
@@ -237,23 +229,6 @@ uint16_t map(uint16_t x, uint16_t in_min, uint16_t in_max, uint16_t out_min, uin
 }
 
 
-
-// Convert MIDI note number to CV
-// DAC outputs from 0 to 3v3 (3300 mV's)
-// We have 1V/Oct, so 3+ octaves on a 3v3 system
-// The DAC wants values from 0 to 4095
-uint16_t mtocv(uint8_t midiPitch)
-{
-	float voltsPerNote = 0.0833f; // 1/12 V
-	float mV; // from 0 to 0xFFF (4096);
-
-	mV = 1000 * (midiPitch * voltsPerNote);
-
-	return (map(mV, 0, 3300, 0, 4095));
-}
-
-
-
 float mtoval(uint8_t midiPitch)
 {
 	float voltsPerNote = 0.0833f; // 1/12 V
@@ -271,27 +246,29 @@ int main(void)
 	hardware.StartAdc();
 	sysSampleRate = hardware.AudioSampleRate();
 	sysCallbackRate = hardware.AudioCallbackRate();
-            QSPIHandle::Config qspi_config;
-            qspi_config.device = QSPIHandle::Config::Device::IS25LP064A;
-            qspi_config.mode   = QSPIHandle::Config::Mode::MEMORY_MAPPED;
-            qspi_config.pin_config.io0 = {DSY_GPIOF, 8};
-            qspi_config.pin_config.io1 = {DSY_GPIOF, 9};
-            qspi_config.pin_config.io2 = {DSY_GPIOF, 7};
-            qspi_config.pin_config.io3 = {DSY_GPIOF, 6};
-            qspi_config.pin_config.clk = {DSY_GPIOF, 10};
-            qspi_config.pin_config.ncs = {DSY_GPIOG, 6};
-            hw.qspi.Init(qspi_config);
+ 
+	// init qspi flash for saving and loading patches
+	QSPIHandle::Config qspi_config;
+	qspi_config.device = QSPIHandle::Config::Device::IS25LP064A;
+	qspi_config.mode   = QSPIHandle::Config::Mode::MEMORY_MAPPED;
+	qspi_config.pin_config.io0 = {DSY_GPIOF, 8};
+	qspi_config.pin_config.io1 = {DSY_GPIOF, 9};
+	qspi_config.pin_config.io2 = {DSY_GPIOF, 7};
+	qspi_config.pin_config.io3 = {DSY_GPIOF, 6};
+	qspi_config.pin_config.clk = {DSY_GPIOF, 10};
+	qspi_config.pin_config.ncs = {DSY_GPIOG, 6};
+	hw.qspi.Init(qspi_config);
+	
 	slot = 0;
 
 	// setup incl default values
 	vasynth.First();
 
-	// init AD inputs
-	transposeParam.Init(hardware.knob1, -99, 99, transposeParam.LOGARITHMIC);
+	// parameters for knob controls
 	cutoffParam.Init(hardware.knob1, 30, 30000, cutoffParam.LOGARITHMIC);
 	attackParam.Init(hardware.knob1, 0, 20, attackParam.LOGARITHMIC);
 	releaseParam.Init(hardware.knob2, 0, 5, releaseParam.LINEAR);
-	detuneParam.Init(hardware.knob2, 0, 1, detuneParam.LINEAR);
+	detuneParam.Init(hardware.knob2, 0.75, 1, detuneParam.LINEAR);
 	portamentoParam.Init(hardware.knob2, 0, 1, portamentoParam.LOGARITHMIC);
 
 
@@ -305,22 +282,6 @@ int main(void)
 	midi.Init(midi_config);
 	#endif
 
-/*	// LCD
-	LcdHD44780::Config lcd_config;
-	lcd_config.cursor_on = true;
-	lcd_config.cursor_blink = false;
-	lcd_config.rs = hardware.GetPin(PIN_LCD_RS);
-	lcd_config.en = hardware.GetPin(PIN_LCD_EN);
-	lcd_config.d4 = hardware.GetPin(PIN_LCD_D4);
-	lcd_config.d5 = hardware.GetPin(PIN_LCD_D5);
-	lcd_config.d6 = hardware.GetPin(PIN_LCD_D6);
-	lcd_config.d7 = hardware.GetPin(PIN_LCD_D7);
-	lcd.Init(lcd_config);
-
-	// UI
-	OscUI ui;
-	ui.Init(&lcd);
-*/
 	// logging over serial USB
 	#ifdef OPD_LOGG
 	hardware.StartLog(false); // start log but don't wait for PC - we can be connected to a battery
@@ -345,15 +306,7 @@ int main(void)
 	// Loop forever
 	for(;;)
 	{
-		// handle UI
-
-//		float adcButton = hardware.adc.GetFloat(AD_LCDBUTTON_INDEX);
-//		ui.Button(adcButton);
-//		ui.Work();
-//		ui.Draw();
-		
-
-		
+				
 		#ifdef OPD_BASE_MIDI
         // handle MIDI Events
         midi.Listen();
@@ -361,45 +314,8 @@ int main(void)
         {
             HandleMidiMessage(midi.PopEvent());
         }
-		#endif
-
-		
-/*		// read analog inputs
-		for (uint8_t i = AD_POT0_INDEX; i <= CV_NUMBER; i++)
-		{
-			modSources.cvValue[i - AD_POT0_INDEX] = hardware.adc.GetFloat(i);
-		}
-		if (vasynth.pot0_target_ == POT_TARGET_FILTER)
-		{
-			vasynth.filter_cutoff_ = modSources.cvValue[0] * FILTER_CUTOFF_MAX;
-		}
-
-		if (vasynth.pot1_target_ == POT_TARGET_FILTER)
-		{
-			vasynth.filter_res_ = modSources.cvValue[1];
-			if ((vasynth.filter_res_ > 0.0f) && (vasynth.filter_res_ < 1.0f))
-			{
-				for (uint8_t j = 0; j < vasynth.voices_; j++)
-				{
-					vasynth.svf_[j].SetRes(vasynth.filter_res_);
-				}
-			}
-		}
-
-		// Reset to upload?
-		buttonUpload.Debounce();
-		if (buttonUpload.Pressed())
-		{
-			RebootToBootloader();
-		}
-*/
-		// wait
-		
+		#endif		
 	}
-}
-float CatchParam(float old, float cur, float thresh)
-{
-	return (abs(old - cur) > thresh) ? cur : old;
 }
 
 void ConditionalParameter(float  oldVal,
@@ -407,7 +323,7 @@ void ConditionalParameter(float  oldVal,
                           float &param,
 						  float  update)
 {
-    if(abs(2 - 1) < 0.00005)
+    if(abs(oldVal - newVal) < 0.00005)
     {
         param = update;
     }
@@ -431,12 +347,6 @@ void UpdateButtons()
 	
 }
 
-void UpdateEncoder()
-{
-
-
-}
-
 void UpdateLeds()
 {
 	hardware.UpdateLeds();
@@ -453,7 +363,6 @@ void Controls()
 	UpdateKnobs();
 	UpdateLeds();
 	UpdateButtons();
-	UpdateEncoder();
 
 }
 void UpdateKnobs()
@@ -553,7 +462,7 @@ void UpdateKnobs()
 			vasynth.SetWaveform();
 			if (abs(oldk2 - k2) > 0.0005f )
 			{
-				vasynth.osc2_detune_ = k2;
+				vasynth.osc2_detune_ = detuneParam.Process();
 			}
             break;
 //---------------Osc Voices and Portamento ------------------
@@ -702,10 +611,8 @@ void UpdateKnobs()
 				vasynth.pan_ = (k2);
 			}
             break;
-			
+//----------------Select Presets-------------			
 		case 11:
-		mode=8;
-		/*
 			hardware.led1.Set(0, 1, 0);
 			hardware.led2.Set(0, 0, 1);
 
@@ -744,7 +651,6 @@ void UpdateKnobs()
 					vasynth.SaveToLive(&preset_setting[5]);
 				}
 			}
-*/
 			break;
 		case 12:
 			mode = 8;
